@@ -218,7 +218,11 @@
               </div>
               <note-select-popup type="Invoice" @select="onSelectNote" />
             </sw-popup>
-            <sw-input-group :label="$t('invoices.notes')">
+            <sw-input-group
+              :label="$t('invoices.notes')"
+              :error="notesError"
+              required
+            >
               <base-custom-input
                 v-model="newInvoice.notes"
                 :fields="InvoiceFields"
@@ -491,6 +495,9 @@ export default {
         reference_number: {
           maxLength: maxLength(255),
         },
+        notes: {
+          required,
+        },
       },
       selectedCustomer: {
         required,
@@ -664,6 +671,15 @@ export default {
 
       if (!this.$v.newInvoice.reference_number.maxLength) {
         return this.$tc('validation.ref_number_maxlength')
+      }
+    },
+    notesError() {
+      if (!this.$v.newInvoice.notes.$error) {
+        return ''
+      }
+
+      if (!this.$v.newInvoice.notes.required) {
+        return "Don't forget the payment note!"
       }
     },
   },
