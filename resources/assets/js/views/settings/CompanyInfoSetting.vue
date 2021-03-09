@@ -71,11 +71,25 @@
           />
         </sw-input-group>
 
+        <sw-input-group :label="$tc('settings.company_info.bunq_me_link')">
+          <sw-input
+            v-model="formData.bunq_me_link"
+            :placeholder="$t('settings.company_info.bunq_me_link')"
+            class="mt-2"
+          />
+          <p
+            class="mt-2 text-sm leading-snug text-gray-500"
+            style="max-width: 680px"
+          >
+            {{ $t('settings.company_info.bunq_me_link_footnote') }}
+          </p>
+        </sw-input-group>
+
         <sw-input-group :label="$tc('settings.company_info.phone')">
           <sw-input
             v-model="formData.phone"
-            class="mt-2"
             :placeholder="$t('settings.company_info.phone')"
+            class="mt-2"
           />
         </sw-input-group>
 
@@ -179,6 +193,7 @@ export default {
       isFetchingData: false,
       formData: {
         name: null,
+        bunq_me_link: '',
         email: '',
         phone: '',
         zip: '',
@@ -287,6 +302,7 @@ export default {
       this.isFetchingData = true
       if (response.data.user) {
         this.formData.name = response.data.user.company.name
+        this.formData.bunq_me_link = response.data.user.company.bunq_me_link
         this.formData.address_street_1 =
           response.data.user.company.address.address_street_1
         this.formData.address_street_2 =

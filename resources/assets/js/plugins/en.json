@@ -662,6 +662,8 @@
     "company_info": {
       "company_info": "Company info",
       "company_name": "Company Name",
+      "bunq_me_link": "bunq.me link",
+      "bunq_me_link_footnote": "If filled in, it will be used to generate the QR code on the invoices. Link should be like https://bunq.me/my-company",
       "company_logo": "Company Logo",
       "section_description": "Information about your company that will be displayed on invoices, estimates and other documents created by Crater.",
       "phone": "Phone",

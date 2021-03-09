@@ -60,7 +60,7 @@ class CompanyController extends Controller
     {
         $company = Auth::user()->company;
 
-        $company->update($request->only('name'));
+        $company->update($request->only('name', 'bunq_me_link'));
 
         $company->address()->updateOrCreate(['company_id' => $company->id], $request->except(['name']));
 

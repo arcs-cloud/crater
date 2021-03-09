@@ -382,12 +382,14 @@
                         </div>
                         {!! $notes !!}
                     </div>
-                    <div class='qr'>
-                        <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(100)->generate('https://bunq.me/arcs/' . $invoice->total / 100 . '/' . $invoice->invoice_number)) !!} ">
-                    </div>
-                    <div class='qrnote'>
-                        If you're unable to scan the QR code, you can follow <a href="https://bunq.me/arcs/{{$invoice->total / 100}}/{{$invoice->invoice_number}}">this link</a> to proceed with the payment.
-                    </div>
+                    @if($invoice->bunq_me_link !== "")
+                        <div class='qr'>
+                            <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(100)->generate($invoice->bunq_me_link)) !!} ">
+                        </div>
+                        <div class='qrnote'>
+                            If you're unable to scan the QR code, you can follow <a href="{{ $invoice->bunq_me_link }}">this link</a> to proceed with the payment.
+                        </div>
+                    @endif
                 @endif
             </div>
         </div>

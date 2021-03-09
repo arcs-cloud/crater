@@ -58,7 +58,8 @@ class Invoice extends Model implements HasMedia
         'formattedCreatedAt',
         'formattedInvoiceDate',
         'formattedDueDate',
-        'invoicePdfUrl'
+        'invoicePdfUrl',
+        'bunqMeLink'
     ];
 
     public function setInvoiceDateAttribute($value)
@@ -570,5 +571,10 @@ class Invoice extends Model implements HasMedia
             '{INVOICE_REF_NUMBER}' => $this->reference_number,
             '{INVOICE_LINK}' => url('/customer/invoices/pdf/' . $this->unique_hash)
         ];
+    }
+
+    public function getBunqMeLinkAttribute()
+    {
+        return sprintf('%s/%s/%s', $this->company->bunq_me_link, $this->total / 100, $this->invoice_number);
     }
 }
