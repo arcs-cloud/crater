@@ -124,6 +124,7 @@ class Payment extends Model implements HasMedia
         $data['user'] = $this->user->toArray();
         $data['company'] = Company::find($this->company_id);
         $data['body'] = $this->getEmailBody($data['body']);
+        $data['attach']['data'] = ($this->getEmailAttachmentSetting()) ? $this->getPDFData() : null;  
 
         \Mail::to($data['to'])->send(new SendPaymentMail($data));
 
@@ -270,6 +271,11 @@ class Payment extends Model implements HasMedia
         $payment = Payment::where('payment_number', 'LIKE', $value . '-%')
             ->orderBy('payment_number', 'desc')
             ->first();
+
+        // Get number length config
+        $numberLength = CompanySetting::getSetting('payment_number_length', request()->header('company'));
+        $numberLengthText = "%0{$numberLength}d";
+
         if (!$payment) {
             // We get here if there is no order at all
             // If there is no number set it to 0, which will be 1 at the end.
@@ -285,7 +291,7 @@ class Payment extends Model implements HasMedia
         // the %05d part makes sure that there are always 6 numbers in the string.
         // so it adds the missing zero's when needed.
 
-        return sprintf('%06d', intval($number) + 1);
+        return sprintf($numberLengthText, intval($number) + 1);
     }
 
     public function scopeWhereSearch($query, $search)
@@ -398,6 +404,17 @@ class Payment extends Model implements HasMedia
         $format = CompanySetting::getSetting('payment_from_customer_address_format', $this->company_id);
 
         return $this->getFormattedString($format);
+    }
+
+    public function getEmailAttachmentSetting()
+    {
+        $paymentAsAttachment = CompanySetting::getSetting('payment_email_attachment', $this->company_id);
+
+        if($paymentAsAttachment == 'NO') {
+            return false;
+        }
+
+        return true;
     }
 
     public function getNotes()

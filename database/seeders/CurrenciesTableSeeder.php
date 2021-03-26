@@ -37,7 +37,8 @@ class CurrenciesTableSeeder extends Seeder
                 'symbol' => '€',
                 'precision' => '2',
                 'thousand_separator' => '.',
-                'decimal_separator' => ','
+                'decimal_separator' => ',',
+                'swap_currency_symbol' => true
             ],
             [
                 'name' => 'South African Rand',
@@ -558,7 +559,14 @@ class CurrenciesTableSeeder extends Seeder
                 'thousand_separator' => ',',
                 'decimal_separator' => '.'
             ],
-            
+            [
+                'name' => 'Moroccan Dirham',
+                'code' => 'MAD',
+                'symbol' => 'DH',
+                'precision' => '2',
+                'thousand_separator' => ',',
+                'decimal_separator' => '.'
+            ],
         ];
 
         foreach ($currencies as $currency) {
