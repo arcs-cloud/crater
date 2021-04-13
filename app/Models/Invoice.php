@@ -2,6 +2,7 @@
 
 namespace Crater\Models;
 
+use App;
 use Crater\Models\Company;
 use Crater\Models\CompanySetting;
 use Crater\Models\Currency;
@@ -433,7 +434,7 @@ class Invoice extends Model implements HasMedia
         $data['user'] = $this->user->toArray();
         $data['company'] = Company::find($this->company_id);
         $data['body'] = $this->getEmailBody($data['body']);
-        $data['attach']['data'] = ($this->getEmailAttachmentSetting()) ? $this->getPDFData() : null;  
+        $data['attach']['data'] = ($this->getEmailAttachmentSetting()) ? $this->getPDFData() : null;
 
         if ($this->status == Invoice::STATUS_DRAFT) {
             $this->status = Invoice::STATUS_SENT;
@@ -514,6 +515,9 @@ class Invoice extends Model implements HasMedia
         $invoiceTemplate = InvoiceTemplate::find($this->invoice_template_id);
 
         $company = Company::find($this->company_id);
+        $locale = CompanySetting::getSetting('language',  $company->id);
+
+        App::setLocale($locale);
 
         $logo = $company->logo_path;
 
@@ -535,7 +539,7 @@ class Invoice extends Model implements HasMedia
     {
         $invoiceAsAttachment = CompanySetting::getSetting('invoice_email_attachment', $this->company_id);
 
-        if($invoiceAsAttachment == 'NO') {
+        if ($invoiceAsAttachment == 'NO') {
             return false;
         }
 

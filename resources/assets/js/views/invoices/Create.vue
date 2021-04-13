@@ -460,7 +460,7 @@ export default {
       taxPerItem: null,
       discountPerItem: null,
       isLoadingInvoice: false,
-      isLoadingData: false,
+      isLoadingData: true,
       isLoading: false,
       maxDiscount: 0,
       invoicePrefix: null,
@@ -722,6 +722,8 @@ export default {
 
     ...mapActions('customFields', ['fetchCustomFields']),
 
+    ...mapActions('notification', ['showNotification']),
+
     selectFixed() {
       if (this.newInvoice.discount_type === 'fixed') {
         return
@@ -832,10 +834,9 @@ export default {
 
               if (res2.data) {
                 let customFields = res2.data.customFields.data
-                this.setEditCustomFields(fields, customFields)
+                await this.setEditCustomFields(fields, customFields)
               }
             }
-
             this.isLoadingInvoice = false
           })
           .catch((error) => {
@@ -918,8 +919,10 @@ export default {
         .then((res) => {
           if (res.data) {
             this.$router.push(`/admin/invoices/${res.data.invoice.id}/view`)
-
-            window.toastr['success'](this.$t('invoices.created_message'))
+            this.showNotification({
+              type: 'success',
+              message: this.$t('invoices.created_message'),
+            })
           }
 
           this.isLoading = false
@@ -935,13 +938,17 @@ export default {
           this.isLoading = false
           if (res.data.success) {
             this.$router.push(`/admin/invoices/${res.data.invoice.id}/view`)
-            window.toastr['success'](this.$t('invoices.updated_message'))
+            this.showNotification({
+              type: 'success',
+              message: this.$t('invoices.updated_message'),
+            })
           }
 
           if (res.data.error === 'invalid_due_amount') {
-            window.toastr['error'](
-              this.$t('invoices.invalid_due_amount_message')
-            )
+            this.showNotification({
+              type: 'error',
+              message: this.$t('invoices.invalid_due_amount_message'),
+            })
           }
         })
         .catch((err) => {
