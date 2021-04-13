@@ -2,6 +2,7 @@
 
 namespace Crater\Models;
 
+use App;
 use Crater\Models\EstimateTemplate;
 use Crater\Models\Company;
 use Crater\Models\Tax;
@@ -383,7 +384,7 @@ class Estimate extends Model implements HasMedia
         $data['user'] = $this->user->toArray();
         $data['company'] = $this->company->toArray();
         $data['body'] = $this->getEmailBody($data['body']);
-        $data['attach']['data'] = ($this->getEmailAttachmentSetting()) ? $this->getPDFData() : null;  
+        $data['attach']['data'] = ($this->getEmailAttachmentSetting()) ? $this->getPDFData() : null;
 
         \Mail::to($data['to'])->send(new SendEstimateMail($data));
 
@@ -431,6 +432,10 @@ class Estimate extends Model implements HasMedia
         $estimateTemplate = EstimateTemplate::find($this->estimate_template_id);
 
         $company = Company::find($this->company_id);
+        $locale = CompanySetting::getSetting('language',  $company->id);
+
+        App::setLocale($locale);
+
         $logo = $company->logo_path;
 
         view()->share([
@@ -477,7 +482,7 @@ class Estimate extends Model implements HasMedia
     {
         $estimateAsAttachment = CompanySetting::getSetting('estimate_email_attachment', $this->company_id);
 
-        if($estimateAsAttachment == 'NO') {
+        if ($estimateAsAttachment == 'NO') {
             return false;
         }
 

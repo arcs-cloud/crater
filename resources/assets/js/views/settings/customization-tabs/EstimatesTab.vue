@@ -120,9 +120,7 @@
       </div>
       <div class="ml-4">
         <p class="p-0 mb-1 text-base leading-snug text-black">
-          {{
-            $t('settings.customization.estimates.estimate_email_attachment')
-          }}
+          {{ $t('settings.customization.estimates.estimate_email_attachment') }}
         </p>
 
         <p
@@ -130,7 +128,9 @@
           style="max-width: 480px"
         >
           {{
-            $t('settings.customization.estimates.estimate_email_attachment_setting_description')
+            $t(
+              'settings.customization.estimates.estimate_email_attachment_setting_description'
+            )
           }}
         </p>
       </div>
@@ -139,15 +139,20 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
-const { required, maxLength, minValue, alpha, numeric } = require('vuelidate/lib/validators')
+import { mapActions } from 'vuex'
+const {
+  required,
+  maxLength,
+  minValue,
+  alpha,
+  numeric,
+} = require('vuelidate/lib/validators')
 
 export default {
   props: {
     settings: {
       type: Object,
-      require: true,
-      default: false,
+      required: true,
     },
   },
 
@@ -236,7 +241,7 @@ export default {
       estimate_number_length: {
         required,
         minValue: minValue(1),
-        numeric
+        numeric,
       },
     },
   },
@@ -244,7 +249,9 @@ export default {
   watch: {
     settings(val) {
       this.estimates.estimate_prefix = val ? val.estimate_prefix : ''
-      this.estimates.estimate_number_length = val ? val.estimate_number_length : ''
+      this.estimates.estimate_number_length = val
+        ? val.estimate_number_length
+        : ''
 
       this.estimates.estimate_mail_body = val ? val.estimate_mail_body : ''
       this.estimates.company_address_format = val
@@ -281,7 +288,7 @@ export default {
 
   methods: {
     ...mapActions('company', ['updateCompanySettings']),
-
+    ...mapActions('notification', ['showNotification']),
     async setEstimateSetting() {
       let data = {
         settings: {
@@ -291,7 +298,10 @@ export default {
       }
       let response = await this.updateCompanySettings(data)
       if (response.data) {
-        window.toastr['success'](this.$t('general.setting_updated'))
+        this.showNotification({
+          type: 'success',
+          message: this.$t('general.setting_updated'),
+        })
       }
     },
 
@@ -324,9 +334,12 @@ export default {
       }
 
       if (this.updateSetting(data)) {
-        window.toastr['success'](
-          this.$t('settings.customization.estimates.estimate_setting_updated')
-        )
+        this.showNotification({
+          type: 'success',
+          message: this.$t(
+            'settings.customization.estimates.estimate_setting_updated'
+          ),
+        })
       }
     },
 
