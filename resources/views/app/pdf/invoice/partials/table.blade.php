@@ -1,25 +1,18 @@
 <table width="100%" class="items-table" cellspacing="0" border="0">
     <tr class="item-table-heading-row">
-        <th width="2%" class="pr-20 text-right item-table-heading">#</th>
         <th width="40%" class="pl-0 text-left item-table-heading">@lang('pdf_items_label')</th>
-        <th class="pr-20 text-right item-table-heading">@lang('pdf_quantity_label')</th>
-        <th class="pr-20 text-right item-table-heading">@lang('pdf_price_label')</th>
+        <th class="pr-20 text-right item-table-heading">Aantal</th>
+        <th class="pr-20 text-right item-table-heading">Kosten</th>
         @if($invoice->discount_per_item === 'YES')
         <th class="pl-10 text-right item-table-heading">@lang('pdf_discount_label')</th>
         @endif
-        <th class="text-right item-table-heading">@lang('pdf_amount_label')</th>
+        <th class="text-right item-table-heading">Totaal</th>
     </tr>
     @php
         $index = 1
     @endphp
     @foreach ($invoice->items as $item)
         <tr class="item-row">
-            <td
-                class="pr-20 text-right item-cell"
-                style="vertical-align: top;"
-            >
-                {{$index}}
-            </td>
             <td
                 class="pl-0 text-left item-cell"
                 style="vertical-align: top;"
@@ -72,7 +65,7 @@
 <div class="total-display-container">
     <table width="100%" cellspacing="0px" border="0" class="total-display-table @if(count($invoice->items) > 12) page-break @endif">
         <tr>
-            <td class="border-0 total-table-attribute-label">@lang('pdf_subtotal')</td>
+            <td class="border-0 fade total-table-attribute-label">@lang('pdf_subtotal')</td>
             <td class="py-2 border-0 item-cell total-table-attribute-value">
                 {!! format_money_pdf($invoice->sub_total, $invoice->user->currency) !!}
             </td>
@@ -81,7 +74,7 @@
         @if ($invoice->tax_per_item === 'YES')
             @for ($i = 0; $i < count($labels); $i++)
                 <tr>
-                    <td class="border-0 total-table-attribute-label">
+                    <td class="border-0 fade total-table-attribute-label">
                         {{$labels[$i]}}
                     </td>
                     <td class="py-2 border-0 item-cell total-table-attribute-value">
@@ -126,16 +119,11 @@
         @endif
 
         <tr>
-            <td class="py-3"></td>
-            <td class="py-3"></td>
-        </tr>
-        <tr>
             <td class="border-0 total-border-left total-table-attribute-label">
                 @lang('pdf_total')
             </td>
             <td
-                class="py-8 border-0 total-border-right item-cell total-table-attribute-value"
-                style="color: #5851D8"
+                class="final-total py-8 border-0 total-border-right item-cell total-table-attribute-value"
             >
                 {!! format_money_pdf($invoice->total, $invoice->user->currency)!!}
             </td>
